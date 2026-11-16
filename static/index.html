@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#101827" />
+    <title>Docflow — Markdown conversion</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
+
+    <main class="shell">
+      <header class="topbar">
+        <a class="brand" href="/" aria-label="Docflow home">
+          <span class="brand-mark" aria-hidden="true">↘</span>
+          <span>docflow</span>
+          <span class="beta">MARKDOWN LAB</span>
+        </a>
+        <div class="topbar-actions">
+          <span id="connection-status" class="connection-status" title="Checking service">
+            <i></i> Connecting
+          </span>
+          <button id="upload-button" class="button button-primary" type="button">
+            <span aria-hidden="true">＋</span> Add document
+          </button>
+        </div>
+      </header>
+
+      <section class="intro">
+        <div>
+          <p class="eyebrow">Document pipeline</p>
+          <h1>Turn your source files into useful Markdown.</h1>
+          <p class="lede">
+            Select a file from your docs table, then let MarkItDown extract the
+            text, structure, and tables for you.
+          </p>
+        </div>
+        <div class="intro-stat" aria-label="Supported formats">
+          <span class="stat-icon">✦</span>
+          <div><strong>PDF, DOCX, PPTX</strong><small>and more supported</small></div>
+        </div>
+      </section>
+
+      <section class="workspace" aria-label="Document conversion workspace">
+        <div class="documents-card card">
+          <div class="card-toolbar">
+            <div>
+              <div class="toolbar-title-row">
+                <h2>Documents</h2>
+                <span id="document-count" class="count-badge">0</span>
+              </div>
+              <p id="selection-summary">Choose a document to inspect it.</p>
+            </div>
+            <div class="toolbar-controls">
+              <label class="search" for="search-input">
+                <span aria-hidden="true">⌕</span>
+                <input id="search-input" type="search" autocomplete="off" placeholder="Find a document" />
+              </label>
+              <button id="bulk-convert" class="button button-quiet" type="button" disabled>
+                Convert selected
+              </button>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th class="check-column"><input id="select-all" type="checkbox" aria-label="Select all visible documents" /></th>
+                  <th>Document</th>
+                  <th>Type</th>
+                  <th>Status</th>
+                  <th>Updated</th>
+                  <th><span class="sr-only">Actions</span></th>
+                </tr>
+              </thead>
+              <tbody id="documents-body"></tbody>
+            </table>
+            <div id="table-loading" class="table-message">
+              <span class="spinner" aria-hidden="true"></span> Loading your docs table…
+            </div>
+            <div id="table-empty" class="empty-table hidden">
+              <span class="empty-symbol">▧</span>
+              <h3>No documents here yet</h3>
+              <p>Add a PDF, DOCX, PPTX, or another supported file to start converting.</p>
+              <button class="button button-primary empty-upload" type="button">Add a document</button>
+            </div>
+          </div>
+        </div>
+
+        <aside class="detail-card card" aria-live="polite">
+          <div id="detail-empty" class="detail-empty">
+            <span class="detail-illustration" aria-hidden="true"><span></span><span></span><span></span></span>
+            <h2>Your Markdown appears here</h2>
+            <p>Pick a row in the docs table, then run a conversion.</p>
+          </div>
+
+          <div id="detail-content" class="detail-content hidden">
+            <div class="detail-heading">
+              <div class="file-icon large" id="detail-file-icon">PDF</div>
+              <div class="detail-title-wrap">
+                <p class="eyebrow" id="detail-file-type">DOCUMENT</p>
+                <h2 id="detail-name">—</h2>
+                <p id="detail-meta">—</p>
+              </div>
+              <button id="close-detail" class="icon-button" type="button" aria-label="Close document details">×</button>
+            </div>
+
+            <div id="detail-state" class="conversion-state">
+              <span class="state-dot"></span>
+              <span id="detail-status">Ready to convert</span>
+            </div>
+
+            <div class="detail-actions">
+              <button id="convert-button" class="button button-primary button-full" type="button">Convert to Markdown</button>
+              <button id="retry-button" class="button button-quiet button-full hidden" type="button">Try again</button>
+            </div>
+
+            <div id="failure-message" class="failure hidden" role="alert"></div>
+
+            <div class="preview-heading">
+              <div>
+                <h3>Markdown output</h3>
+                <p id="conversion-time">Nothing converted yet</p>
+              </div>
+              <div class="preview-actions">
+                <button id="copy-markdown" class="icon-text-button" type="button" disabled>Copy</button>
+                <button id="download-markdown" class="icon-text-button" type="button" disabled>Download</button>
+              </div>
+            </div>
+            <div id="markdown-preview" class="markdown-preview" tabindex="0">
+              <div class="preview-placeholder">The extracted Markdown will be shown here.</div>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="activity-section" aria-labelledby="activity-title">
+        <div class="section-title-row">
+          <div>
+            <p class="eyebrow">Pipeline activity</p>
+            <h2 id="activity-title">Recent conversions</h2>
+          </div>
+          <button id="refresh-button" class="text-button" type="button">Refresh list ↻</button>
+        </div>
+        <div id="activity-list" class="activity-list">
+          <p class="activity-empty">No conversions are running.</p>
+        </div>
+      </section>
+    </main>
+
+    <dialog id="upload-dialog" class="upload-dialog" aria-labelledby="upload-title">
+      <form id="upload-form" method="dialog">
+        <div class="dialog-heading">
+          <div>
+            <p class="eyebrow">Add to docs table</p>
+            <h2 id="upload-title">Upload a document</h2>
+          </div>
+          <button id="close-upload" class="icon-button" type="button" aria-label="Close upload dialog">×</button>
+        </div>
+        <label id="drop-zone" class="drop-zone" for="file-input">
+          <input id="file-input" name="file" type="file" accept=".pdf,.docx,.pptx,.xlsx,.xls,.csv,.html,.htm,.txt,.md,.png,.jpg,.jpeg,.gif,.bmp,.tiff" multiple />
+          <span class="drop-icon" aria-hidden="true">↑</span>
+          <strong>Drop files here or choose from your computer</strong>
+          <small>PDF, DOCX, PPTX, XLSX, HTML, images, and text files</small>
+        </label>
+        <div id="upload-queue" class="upload-queue hidden"></div>
+        <div class="dialog-footer">
+          <span id="upload-hint">Files stay in your configured storage.</span>
+          <button id="start-upload" class="button button-primary" type="submit" disabled>Upload document</button>
+        </div>
+      </form>
+    </dialog>
+
+    <div id="toast-region" class="toast-region" aria-live="polite" aria-atomic="true"></div>
+    <script src="/app.js" defer></script>
+  </body>
+</html>

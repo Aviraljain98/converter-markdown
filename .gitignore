@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+.venv/
+data/*.db
+storage/uploads/*
+storage/markdown/*
+!storage/uploads/.gitkeep
+!storage/markdown/.gitkeep
